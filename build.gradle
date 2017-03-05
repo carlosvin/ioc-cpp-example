@@ -1,0 +1,27 @@
+
+apply plugin: 'cpp'
+apply plugin: TestingModelBasePlugin
+
+model {
+    components {
+        ioc(NativeExecutableSpec)
+    }
+    testSuites {
+        iocTest(NativeTestSuiteBinarySpec) {
+            testing $.components.ioc
+        }
+    }
+    binaries {
+        all {
+            if (toolChain in VisualCpp) {
+                cppCompiler.args '/std:c++latest'
+            } else {
+                cppCompiler.args '-std=c++11'
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.4.1'
+}
