@@ -4,10 +4,11 @@
 
 class Content {
     public:
-        Content(std::ifstream input);
+        Content(std::ifstream & input);
         Content(const std::string & fileContent);
 
         std::string html();
+        std::ostream& operator << ( std::ostream& os ) const;
     private:
         void _parse();
 

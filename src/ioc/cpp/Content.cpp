@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Content::Content(ifstream in): 
+Content::Content(ifstream & in): 
     Content(string{istreambuf_iterator<char>{in}, istreambuf_iterator<char>{}})
 {
 }
@@ -26,4 +26,9 @@ std::string Content::html()
 void Content::_parse() 
 {
 
+}
+
+std::ostream& Content::operator << ( std::ostream& os ) const {
+    os << _raw;
+    return os;
 }
