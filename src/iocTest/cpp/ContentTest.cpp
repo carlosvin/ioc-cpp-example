@@ -19,6 +19,6 @@ TEST_CASE( "Create Content from non existent file", "[content][file]" )
 
 TEST_CASE( "Create Content from file", "[content][file]" ) 
 {
-    std::ifstream t{"test/example.txt"};
+    std::ifstream t{"example.txt"};
     REQUIRE( Content(t).html() == "" );
 }

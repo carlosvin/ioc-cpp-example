@@ -9,12 +9,10 @@ test_sources = ['src/iocTest/cpp/ContentTest.cpp', 'src/ioc/cpp/Content.cpp']
 
 content_test = executable('content_test', test_sources)
 
-infile = files('src/iocTest/cpp/resources/example.txt')[0]
+# when they implement https://github.com/mesonbuild/meson/issues/860 there will be a better way to copy test resources
 
-mytarget = custom_target('example',
-    input: infile,
-    output : 'example.txt',
-    command: ['cp', '@INPUT@', '@OUTPUT@']
-)
+configure_file(input : 'src/iocTest/cpp/resources/example.txt',
+  output : 'example.txt',
+  configuration : configuration_data())
 
 test('content test', content_test)
