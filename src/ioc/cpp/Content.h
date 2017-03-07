@@ -10,7 +10,7 @@ class Content {
         std::string html();
         std::ostream& operator << ( std::ostream& os ) const;
     private:
-        void _parse();
+        static std::string _parse(const std::string & raw);
 
         std::string _raw;
         std::string _html;

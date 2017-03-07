@@ -8,7 +8,7 @@
 TEST_CASE( "Create Content from string", "[content][string]" ) 
 {
     REQUIRE_THROWS( Content("") );
-    REQUIRE( Content("asdf").html() == "" );
+    REQUIRE( Content("asdf").html() == "<html>asdf</html>" );
 }
 
 TEST_CASE( "Create Content from non existent file", "[content][file]" ) 
@@ -20,5 +20,5 @@ TEST_CASE( "Create Content from non existent file", "[content][file]" )
 TEST_CASE( "Create Content from file", "[content][file]" ) 
 {
     std::ifstream t{"example.txt"};
-    REQUIRE( Content(t).html() == "" );
+    REQUIRE( Content(t).html() == "<html>asdf</html>" );
 }

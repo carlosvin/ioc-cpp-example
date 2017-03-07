@@ -6,29 +6,27 @@ using namespace std;
 
 Content::Content(ifstream & in): 
     Content(string{istreambuf_iterator<char>{in}, istreambuf_iterator<char>{}})
-{
-}
+{}
 
-Content::Content(const std::string & fileContent): _raw(fileContent)
-{
-    if (_raw.empty()) 
-    {
-        throw invalid_argument{"Cannot process empty content"};
-    }
-    _parse();
-}
+Content::Content(const string & fileContent): 
+    _raw(fileContent), _html(_parse(fileContent))
+{}
 
-std::string Content::html()
+string Content::html()
 {
     return _html;
 }
 
-void Content::_parse() 
+string Content::_parse(const string & raw) 
 {
-
+    if (raw.empty()) 
+    {
+        throw invalid_argument{"Cannot process empty content"};
+    }
+    return "<html>" + raw + "</html>";
 }
 
-std::ostream& Content::operator << ( std::ostream& os ) const {
+ostream& Content::operator << ( ostream& os ) const {
     os << _raw;
     return os;
 }
