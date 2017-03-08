@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <exception>
 #include "FilesFinder.h"
 
 using namespace std;
@@ -13,12 +14,12 @@ vector<string> getDirectoryFiles(const string& dir)
 {
     vector<string> files;
     shared_ptr<DIR> directory_ptr(opendir(dir.c_str()), [](DIR* dir){ dir && closedir(dir); });
-    struct dirent *dirent_ptr;
     if (!directory_ptr) {
-        cout << "Error opening : " << strerror(errno) << dir << endl;
-        return files;
+        // TODO filesystem::filesystem_error(C++17)
+        throw std::system_error(error_code(errno, system_category()), "Error opening : " + dir);
     }
  
+    struct dirent *dirent_ptr;
     while ((dirent_ptr = readdir(directory_ptr.get())) != nullptr) {
         files.push_back(string(dirent_ptr->d_name));
     }

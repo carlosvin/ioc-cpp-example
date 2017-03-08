@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <sstream>
 #include <iostream>
+#include <exception>
 
 TEST_CASE( "List build dir files", "[files]" ) 
 {
@@ -21,4 +22,5 @@ TEST_CASE( "List build dir files", "[files]" )
     //INFO(files);
     REQUIRE_FALSE( files.empty() );
     REQUIRE( std::find(files.begin(), files.end(), "build.ninja") != files.end() );
+    REQUIRE_THROWS_AS( getDirectoryFiles("nonexistentdir"), std::system_error );
 }
