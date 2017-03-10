@@ -4,11 +4,10 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include <exception>
+#include <system_error>
 #include "FilesFinder.h"
 
 using namespace std;
-
 
 vector<string> getDirectoryFiles(const string& dir) 
 {
@@ -16,7 +15,7 @@ vector<string> getDirectoryFiles(const string& dir)
     shared_ptr<DIR> directory_ptr(opendir(dir.c_str()), [](DIR* dir){ dir && closedir(dir); });
     if (!directory_ptr) {
         // TODO filesystem::filesystem_error(C++17)
-        throw std::system_error(error_code(errno, system_category()), "Error opening : " + dir);
+        throw system_error(error_code(errno, system_category()), "Error opening : " + dir);
     }
  
     struct dirent *dirent_ptr;

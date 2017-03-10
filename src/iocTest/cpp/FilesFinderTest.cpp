@@ -5,22 +5,22 @@
 #include <algorithm>
 #include <sstream>
 #include <iostream>
-#include <exception>
+#include <system_error>
+
+using namespace std;
 
 TEST_CASE( "List build dir files", "[files]" ) 
 {
     auto files = getDirectoryFiles("."); 
-    std::cout << files.size() << " files in the dir ." << std::endl;
-    std::stringstream  s;
+    cout << files.size() << " files in the dir ." << endl;
+    stringstream  s;
 
-    std::copy(
-        files.begin(), files.end(), 
-        std::ostream_iterator<std::string>(s, ","));
-    std::cout <<  s.str()  << std::endl;
+    copy(files.begin(), files.end(), ostream_iterator<string>(s, ","));
+    cout <<  s.str()  << endl;
 
-    std::for_each(files.begin(), files.end(), [](const std::string& n) { std::cout << n << std::endl; });
-    //INFO(files);
+    for_each(files.begin(), files.end(), [](const string& n) { cout << n << endl; });
+    
     REQUIRE_FALSE( files.empty() );
-    REQUIRE( std::find(files.begin(), files.end(), "build.ninja") != files.end() );
-    REQUIRE_THROWS_AS( getDirectoryFiles("nonexistentdir"), std::system_error );
+    REQUIRE( find(files.begin(), files.end(), "build.ninja") != files.end() );
+    REQUIRE_THROWS_AS( getDirectoryFiles("nonexistentdir"), system_error );
 }
