@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 
-#include "src/iocTest/cpp/catch.hpp"
-#include "src/ioc/cpp/Content.h"
+#include "catch.hpp"
+#include "src/Content.h"
 
 #include <fstream>
 

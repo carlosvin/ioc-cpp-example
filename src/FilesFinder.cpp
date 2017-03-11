@@ -14,7 +14,6 @@ vector<string> getDirectoryFiles(const string& dir)
     vector<string> files;
     shared_ptr<DIR> directory_ptr(opendir(dir.c_str()), [](DIR* dir){ dir && closedir(dir); });
     if (!directory_ptr) {
-        // TODO filesystem::filesystem_error(C++17)
         throw system_error(error_code(errno, system_category()), "Error opening : " + dir);
     }
  
