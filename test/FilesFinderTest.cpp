@@ -9,6 +9,13 @@
 
 using namespace std;
 
+
+TEST_CASE( "Build paths", "[files][paths]" ) 
+{
+    REQUIRE( path({".", "a", "b", "c"}) == "./a/b/c" );
+}
+
+
 TEST_CASE( "List build dir files", "[files]" ) 
 {
     auto files = getDirectoryFiles("."); 
@@ -21,6 +28,7 @@ TEST_CASE( "List build dir files", "[files]" )
     for_each(files.begin(), files.end(), [](const string& n) { cout << n << endl; });
     
     REQUIRE_FALSE( files.empty() );
-    REQUIRE( find(files.begin(), files.end(), "build.ninja") != files.end() );
+    REQUIRE( find(files.begin(), files.end(), "./build.ninja") != files.end() );
+    // REQUIRE( find(files.begin(), files.end(), "." + separator() + "meson-logs" + separator() + "testlog.txt") != files.end() );
     REQUIRE_THROWS_AS( getDirectoryFiles("nonexistentdir"), system_error );
 }
