@@ -3,7 +3,7 @@
 
 int main(int argc, char ** argv) 
 {
-    auto seconds = 60_s;    
-    std::cout << "hello world" << std::endl;
+    auto seconds = 60;    
+    std::cout << "hello world " << seconds << std::endl;
     return 0;
 }

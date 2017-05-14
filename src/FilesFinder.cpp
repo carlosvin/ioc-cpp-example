@@ -1,51 +1,26 @@
 
-#include <dirent.h>
-#include <cstring>
+#include <experimental/filesystem>
 #include <iostream>
 #include <vector>
 #include <memory>
 #include <system_error>
 #include "FilesFinder.h"
 
+namespace fs = std::experimental::filesystem;
 using namespace std;
 
-vector<string> getDirectoryFiles(const string& dir) 
+vector<string> getDirectoryFiles(const string & dir, const vector<string> & extensions) 
 {
-    vector<string> files;
-    shared_ptr<DIR> directory_ptr(opendir(dir.c_str()), [](DIR* dir){ dir && closedir(dir); });
-    if (!directory_ptr) 
+	vector<string> files;
+    for(auto & p: fs::recursive_directory_iterator(dir)) 
     {
-        throw system_error(error_code(errno, system_category()), "Error opening : " + dir);
-    }
- 
-    struct dirent *dirent_ptr;
-    while ((dirent_ptr = readdir(directory_ptr.get())) != nullptr) 
-    {
-        const string fileName {dirent_ptr->d_name};
-        if (dirent_ptr->d_type == DT_DIR) 
+        if (fs::is_regular_file(p)) 
         {
-            if (CURRENT_DIR != fileName && UP_DIR != fileName) 
+	        if (extensions.empty() || find(extensions.begin(), extensions.end(), p.path().extension().string()) != extensions.end()) 
             {
-                auto subFiles = getDirectoryFiles(path({dir, fileName}));
-                files.insert(end(files), begin(subFiles), end(subFiles));
-            }
-        } 
-        else if (dirent_ptr->d_type == DT_REG) 
-        {
-            files.push_back(path({dir, fileName}));
+                files.push_back(p.path().string());
+            } 
         }
     }
-    return files;
-}
-
-string path(initializer_list<string> parts) 
-{
-    string pathTmp {};
-    string separator = "";
-    for (auto & part: parts) 
-    {
-        pathTmp.append(separator).append(part);
-        separator = SEP;
-    }
-    return pathTmp;
+    return files;    
 }

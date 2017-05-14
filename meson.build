@@ -1,5 +1,5 @@
 
-project('ioc', 'cpp',  default_options : ['cpp_std=gnu++14'])
+project('ioc', 'cpp',  default_options : ['cpp_std=c++11'])
 
 # Executables
 executable('ioc', 'src/main.cpp', 'src/Content.cpp', 'src/FilesFinder.cpp')

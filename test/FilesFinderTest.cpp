@@ -6,29 +6,46 @@
 #include <sstream>
 #include <iostream>
 #include <system_error>
+#include <experimental/filesystem>
+
+namespace fs = std::experimental::filesystem;
 
 using namespace std;
 
-
-TEST_CASE( "Build paths", "[files][paths]" ) 
-{
-    REQUIRE( path({".", "a", "b", "c"}) == "./a/b/c" );
-}
-
-
 TEST_CASE( "List build dir files", "[files]" ) 
 {
-    auto files = getDirectoryFiles("."); 
+
+	const auto f = fs::path("./asdf.asdf").string();
+	std::ofstream{ f } << "test";
+
+	auto files = getDirectoryFiles(".");
     cout << files.size() << " files in the dir ." << endl;
-    stringstream  s;
 
-    copy(files.begin(), files.end(), ostream_iterator<string>(s, ","));
-    cout <<  s.str()  << endl;
-
-    for_each(files.begin(), files.end(), [](const string& n) { cout << n << endl; });
-    
     REQUIRE_FALSE( files.empty() );
-    REQUIRE( find(files.begin(), files.end(), "./build.ninja") != files.end() );
-    // REQUIRE( find(files.begin(), files.end(), "." + separator() + "meson-logs" + separator() + "testlog.txt") != files.end() );
-    REQUIRE_THROWS_AS( getDirectoryFiles("nonexistentdir"), system_error );
+
+	REQUIRE_THAT(files, Catch::Matchers::VectorContains(f));
+
+    REQUIRE( getDirectoryFiles("nonexistentdir").empty());
+}
+
+TEST_CASE("Filter files", "[files]")
+{
+	fs::create_directories("sandbox/a/b");
+	vector<string> e_files = {
+		fs::path("./sandbox/a/b/file1.rst").string(), 
+		fs::path("./sandbox/a/file2.RST").string(),
+		fs::path("./sandbox/file3.md").string() 
+	};
+
+	for (auto f: e_files)
+	{
+		std::ofstream {f} << "test";
+	}
+	
+	vector<string> o_files = getDirectoryFiles(".", {".rst", ".RST", ".md"});
+
+	sort(begin(e_files), end(e_files));
+	sort(begin(o_files), end(o_files));
+
+	REQUIRE_THAT(e_files, Catch::Matchers::Equals(o_files));
 }
